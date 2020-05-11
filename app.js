@@ -16,6 +16,7 @@ const catogoryRoute = require('./router/admin_catogory');
 const nutritionRoute = require('./router/admin_nutritions');
 const menuRoute = require('./router/admin_menu');
 const dishRoute = require('./router/dish');
+const userRoute = require('./router/user');
 
 
 
@@ -34,6 +35,7 @@ app.use('/api/admin/catogory', catogoryRoute);
 app.use('/api/admin/nutrition', nutritionRoute);
 app.use('/api/admin/menu', menuRoute);
 app.use('/api/dish', dishRoute);
+app.use('/api/user', userRoute);
 
 
 
@@ -50,3 +52,4 @@ process.on('unhandledRejection', (err, promise) => {
     // Close server
     server.close(() => process.exit(1));
 });
+
