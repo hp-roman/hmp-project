@@ -1,22 +1,37 @@
 const UserSchema = require('../models/user');
 const StatisticSchema = require('../models/statistic');
 const md5 = require('md5');
+const jwt = require('jsonwebtoken');
+
+const accessTokenSecret = 'healthy-meal-planner';
+
 // desc     API register
-// route    /api/user/register?username=&password=
+// route    /api/user/register?username=&password=&confirm=
 
 exports.register = async (req, res, next) => {
     try {
         const {
             username,
-            password
+            password,
+            confirm
         } = req.query;
-        if(!username || !password) return res.json({success: false});
+        if (!username || !password || !confirm) return res.json({
+            success: false,
+            message: 'Vui lòng điền!!!'
+        });
+        if (confirm != password) {
+            res.json({
+                success: false,
+                message: 'Mật khẩu không khớp!!!'
+            });
+        }
         const user = await UserSchema.find({
             username: username
         });
         if (user.length != 0) {
             res.json({
-                success: false
+                success: false,
+                message: 'Tài khoản đã tồn tại!!!'
             });
         } else {
             const statistic = await StatisticSchema.create({
@@ -32,7 +47,7 @@ exports.register = async (req, res, next) => {
             });
             res.status(201).json({
                 success: true,
-                message: 'Register successfully'
+                message: 'Đăng ký thành công!!!'
             });
         }
     } catch (error) {
@@ -46,16 +61,36 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
     try {
-        const {username, password} = req.query;
-        if(!username || !password) return res.json({success: false, message: 'Login failed'});
-        const user = await UserSchema.find({username: username, password: md5(password)});
-        if(user.length == 0){
-            res.json({success: false, message: 'Login failed'});
+        const {
+            username,
+            password
+        } = req.query;
+        if (!username || !password) return res.json({
+            success: false,
+            message: 'Đăng nhập thất bại!!!'
+        });
+        const users = await UserSchema.find({
+            username: username,
+            password: md5(password)
+        });
+        if (users.length == 0) {
+            res.json({
+                success: false,
+                message: 'Đăng nhập thất bại!!!'
+            });
         } else {
-            res.status(200).json({success: true, message: 'Login successfully'});
+            const accessToken = jwt.sign({
+                username: users[0].username
+            }, accessTokenSecret);
+
+            res.json({
+                success: true,
+                message: 'Đăng nhập thành công',
+                accessToken: accessToken
+            });
         }
-        
+
     } catch (error) {
-        
+
     }
 };
