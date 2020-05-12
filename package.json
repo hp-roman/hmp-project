@@ -15,11 +15,12 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "firebase-admin": "^8.9.2",
+    "jsonwebtoken": "^8.5.1",
     "md5": "^2.2.1",
-    "request": "^2.88.2",
-    "request-promise": "^4.2.5",
     "mongoose": "^5.9.13",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.3",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
   }
 }
