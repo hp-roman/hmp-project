@@ -10,26 +10,40 @@ const accessTokenSecret = 'healthy-meal-planner';
 
 exports.register = async (req, res, next) => {
     try {
-        const {
+        let {
             username,
             password,
             confirm
         } = req.query;
-        if (!username || !password || !confirm) return res.json({
-            success: false,
-            message: 'Vui lòng điền!!!'
-        });
+        if (!username || !password || !confirm){
+            return res.json({
+                success: false,
+                message: 'Vui lòng điền!!!'
+            });
+        }
+        if(!username.match(/^[a-zA-Z_][a-zA-Z0-9_]{6,}/gi)){
+            return res.json({
+                success: false,
+                message: 'Tên tài khoản không hợp lệ!!!'
+            });
+        }
+        if(password.length < 6){
+            return res.json({
+                success: false,
+                message: 'Mật khẩu quá ngắn!!!'
+            });
+        }
         if (confirm != password) {
-            res.json({
+            return res.json({
                 success: false,
                 message: 'Mật khẩu không khớp!!!'
             });
         }
-        const user = await UserSchema.find({
+        const users = await UserSchema.find({
             username: username
         });
-        if (user.length != 0) {
-            res.json({
+        if (users.length != 0) {
+            return res.json({
                 success: false,
                 message: 'Tài khoản đã tồn tại!!!'
             });
@@ -45,7 +59,7 @@ exports.register = async (req, res, next) => {
                 name: username,
                 id_statistic: statistic._id
             });
-            res.status(201).json({
+            return res.status(201).json({
                 success: true,
                 message: 'Đăng ký thành công!!!'
             });
@@ -56,7 +70,7 @@ exports.register = async (req, res, next) => {
 
 };
 
-// desc     API for login
+// desc     API for loging in
 // route    /api/user/login?username=&password=
 
 exports.login = async (req, res, next) => {
@@ -65,6 +79,8 @@ exports.login = async (req, res, next) => {
             username,
             password
         } = req.query;
+        console.log(username);
+        console.log(password);
         if (!username || !password) return res.json({
             success: false,
             message: 'Đăng nhập thất bại!!!'
@@ -74,7 +90,7 @@ exports.login = async (req, res, next) => {
             password: md5(password)
         });
         if (users.length == 0) {
-            res.json({
+            return res.json({
                 success: false,
                 message: 'Đăng nhập thất bại!!!'
             });
@@ -82,7 +98,7 @@ exports.login = async (req, res, next) => {
             const accessToken = jwt.sign({
                 username: users[0].username
             }, accessTokenSecret);
-
+            await UserSchema.findByIdAndUpdate({_id: users[0]._id}, {token: accessToken});
             res.json({
                 success: true,
                 message: 'Đăng nhập thành công',
@@ -93,4 +109,11 @@ exports.login = async (req, res, next) => {
     } catch (error) {
 
     }
+};
+
+// desc     API for changing password
+// route    /api/user/change?password=&newpassword=&newconfirm=&token
+
+exports.chagePassword = async (req, res, next) => {
+    // const {password}
 };
