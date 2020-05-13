@@ -79,8 +79,6 @@ exports.login = async (req, res, next) => {
             username,
             password
         } = req.query;
-        console.log(username);
-        console.log(password);
         if (!username || !password) return res.json({
             success: false,
             message: 'Đăng nhập thất bại!!!'
@@ -115,7 +113,7 @@ exports.login = async (req, res, next) => {
 // desc     API for changing password
 // route    /api/user/change?password=&newpassword=&newconfirm=&token=
 
-exports.chagePassword = async (req, res, next) => {
+exports.changePassword = async (req, res, next) => {
     const {password, newpassword, newconfirm, token} = req.query;
     if(!password || !newpassword || !newconfirm){
         return res.json({
