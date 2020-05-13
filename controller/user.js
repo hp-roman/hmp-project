@@ -98,7 +98,8 @@ exports.login = async (req, res, next) => {
             const accessToken = jwt.sign({
                 username: users[0].username
             }, accessTokenSecret);
-            await UserSchema.findByIdAndUpdate({_id: users[0]._id}, {token: accessToken});
+            users[0].token = accessToken;
+            await UserSchema.findByIdAndUpdate({_id: users[0]._id}, users[0]);
             res.json({
                 success: true,
                 message: 'Đăng nhập thành công',
@@ -112,8 +113,38 @@ exports.login = async (req, res, next) => {
 };
 
 // desc     API for changing password
-// route    /api/user/change?password=&newpassword=&newconfirm=&token
+// route    /api/user/change?password=&newpassword=&newconfirm=&token=
 
 exports.chagePassword = async (req, res, next) => {
-    // const {password}
+    const {password, newpassword, newconfirm, token} = req.query;
+    if(!password || !newpassword || !newconfirm){
+        return res.json({
+            success: false,
+            message: 'Vui lòng điền!!!'
+        });
+    }
+    if(newpassword != newconfirm){
+        return res.json({
+            success: false,
+            message: 'Mật khẩu không khớp!!!'
+        });
+    }
+    const user = await UserSchema.findOne({
+        password: md5(password),
+        token: token
+    });
+    if(!user){
+        return res.json({
+            success: false,
+            message: 'Sai mật khẩu!!!'
+        });
+    } else {
+        user.password = md5(newpassword);
+        await UserSchema.findByIdAndUpdate(user.id, user);
+        return res.json({
+            success: true,
+            message: 'Đổi mật khẩu thành công!!!'
+        });
+    }
+
 };
