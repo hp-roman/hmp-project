@@ -18,6 +18,8 @@ const nutritionRoute = require('./router/admin_nutritions');
 const menuRoute = require('./router/admin_menu');
 const dishRoute = require('./router/dish');
 const userRoute = require('./router/user');
+const statisticRoute = require('./router/statistic');
+const historyRoute = require('./router/history');
 
 
 
@@ -37,6 +39,8 @@ app.use('/api/admin/nutrition', nutritionRoute);
 app.use('/api/admin/menu', menuRoute);
 app.use('/api/dish', dishRoute);
 app.use('/api/user', userRoute);
+app.use('/api/statistic', statisticRoute);
+app.use('/api/history', historyRoute);
 
 
 
