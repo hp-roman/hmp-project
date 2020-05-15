@@ -37,11 +37,12 @@ exports.viewDish = async (req, res, next) => {
 };
 
 // desc   API for get history
-// route  /api/history/view
+// route  /api/history/view/:token
 
 exports.viewHistory = async (req, res, next) => {
   try {
-    const history = await HistorySchema.find().sort({view: -1});
+    const {token} = req.params;
+    const history = await HistorySchema.find({token: token}).sort({view: -1});
     const ids = [];
     history.map(value => {
       ids.push(value.id_dish);
