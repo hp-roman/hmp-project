@@ -7,7 +7,8 @@ const DishSchema = new mongoose.Schema({
     menu: Number,
     img: String,
     url: String,
-    view: Number
+    view: Number,
+    price: Number
 });
 
 module.exports = mongoose.model('Dishes', DishSchema);

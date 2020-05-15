@@ -99,26 +99,32 @@ exports.getFoodsMarket = async (req, res, next) => {
 
 exports.getHintMenu = async (req, res, next) => {
   try {
-    const ids = req.query.select.split(",");
-    const foods = await ProductSchema.find({
-      $or: [
-        {
-          _id: ids,
-        },
-      ],
-    });
-    const dishes = await DishSchema.find();
-    const keyMenu = dishFunc(foods, dishes);
-    const menusHint = await MenuSchema.find({
-      $or: [
-        {
-          key: keyMenu,
-        },
-      ],
-    });
-    res.status(200).json({
-      success: true,
-      data: menusHint,
+    const { select } = req.query;
+    console.log(select);
+    const products = await ProductSchema.find({ $or: [{ _id: select.split(',') }] });
+    const id_catogory = [];
+     products.map(value => {
+        if(value.id_catogory.length != 0){
+            id_catogory.push(value.id_catogory);
+        }
+     });
+     const catogories = await CatogorySchema.find({$or : [{_id: id_catogory}]});
+     const name_catogory = [];
+     catogories.map(value => {
+        name_catogory. push(value.name);
+     });
+     const dishes = await DishSchema.find();
+     const dishesMapped = [];
+     dishes.map(dish => {
+        name_catogory.map(name => {
+            if(dish.name.includes(name)){
+                dishesMapped.push(dish);
+            }
+        });
+     });
+
+    res.json({
+        data: dishesMapped
     });
   } catch (error) {}
 };
