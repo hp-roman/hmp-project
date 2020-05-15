@@ -189,7 +189,7 @@ exports.resetPassword = async (req, res, next) => {
     const user = await UserSchema.findOne({ username: username });
     const password = parseInt(100000 + Math.random() * 899999);
     if (user) {
-      await UserSchema.update({ _id: user._id }, { password: md5(password) });
+      await UserSchema.updateOne({ _id: user._id }, { password: md5(password) });
       res.send(`<h1>New password: ${password}</h1>`);
     } else {
       res.send("Hí hí");
