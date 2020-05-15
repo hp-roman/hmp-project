@@ -1,5 +1,6 @@
 const UserSchema = require('../models/user');
 const StatisticSchema = require('../models/statistic');
+const HistorySchema = require('../models/history');
 const md5 = require('md5');
 const jwt = require('jsonwebtoken');
 
@@ -93,10 +94,16 @@ exports.login = async (req, res, next) => {
                 message: 'Đăng nhập thất bại!!!'
             });
         } else {
+            const history = await HistorySchema.find({token: users[0].token});
             const accessToken = jwt.sign({
                 username: users[0].username
             }, accessTokenSecret);
             users[0].token = accessToken;
+            if(history.length != 0){
+                history.map(async value => {
+                    await HistorySchema.update({_id: value._id}, {token: accessToken});
+                });
+            }
             await UserSchema.findByIdAndUpdate({_id: users[0]._id}, users[0]);
             res.json({
                 success: true,

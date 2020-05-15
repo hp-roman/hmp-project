@@ -41,13 +41,15 @@ exports.viewDish = async (req, res, next) => {
 
 exports.viewHistory = async (req, res, next) => {
   try {
-    const {token} = req.params;
-    const history = await HistorySchema.find({token: token}).sort({view: -1});
+    const { token } = req.params;
+    const history = await HistorySchema.find({ token: token }).sort({
+      view: -1,
+    });
     const ids = [];
-    history.map(value => {
+    history.map((value) => {
       ids.push(value.id_dish);
     });
-    const dishes = await DishSchema.find({$or: [{_id: ids}]});
+    const dishes = await DishSchema.find({ $or: [{ _id: ids }] });
     res.json({
       success: true,
       data: dishes,
