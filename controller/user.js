@@ -167,6 +167,9 @@ exports.forgetPassword = async (req, res, next) => {
         user: process.env.user,
         pass: process.env.pass,
       },
+      tls: {
+        rejectUnauthorized: false
+      },
     });
     const mailOptions = {
       from: process.env.user,
