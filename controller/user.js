@@ -160,7 +160,9 @@ exports.forgetPassword = async (req, res, next) => {
       return res.json({ success: false, message: "Email không đúng!!!" });
     }
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.user,
         pass: process.env.pass,
@@ -192,9 +194,8 @@ exports.resetPassword = async (req, res, next) => {
       await UserSchema.update({ _id: user._id }, { password: md5(password) });
       res.send(`New password: ${password}`);
     } else {
-        res.send('Hí hí');
+      res.send("Hí hí");
     }
-    
   } catch (error) {
     console.log(error);
   }
