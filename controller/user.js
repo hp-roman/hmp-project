@@ -159,15 +159,10 @@ exports.forgetPassword = async (req, res, next) => {
     if (!email.match(/[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim)) {
       return res.json({ success: false, message: "Email không đúng!!!" });
     }
-    const transporter = nodemailer.createTransport({
-      service: 'gmail.com',
-      auth: {
-        user: process.env.user,
-        pass: process.env.pass,
-      },
-      tls: {
-        rejectUnauthorized: false
-      },
+    let transporter = nodemailer.createTransport({
+        sendmail: true,
+        newline: 'unix',
+        path: '/usr/sbin/sendmail'
     });
     const mailOptions = {
       from: process.env.user,
