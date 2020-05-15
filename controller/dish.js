@@ -20,3 +20,11 @@ exports.increaseView = async (req, res, next) => {
     }
 
 };
+
+exports.computePrice = async (req, res, next) => {
+    try {
+        
+    } catch (error) {
+        
+    }
+};
