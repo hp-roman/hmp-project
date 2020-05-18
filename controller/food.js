@@ -40,10 +40,30 @@ exports.getFoods = async (req, res, next) => {
 
 exports.getFoodsMenu = async (req, res, next) => {
   try {
-    const menu = await MenuSchema.find();
+    const menus = await MenuSchema.find();
+    const menumap = await Promise.all(
+      menus.map(async (menu) => {
+        let message = "";
+        let price = 0;
+        const dishes = await DishSchema.find({ menu: menu.key });
+        for (const dish of dishes) {
+          if (dish.price != undefined) {
+            price += dish.price;
+          } else {
+            message += `${dish.name}, `;
+          }
+        }
+        if (message != "") {
+          message = "Không bao gồm: " + message;
+        }
+        menu.message = message;
+        menu.price = price;
+        return menu;
+      })
+    );
     res.status(200).json({
       success: true,
-      data: menu,
+      data: menumap,
     });
   } catch (error) {}
 };
@@ -106,7 +126,7 @@ exports.getHintMenu = async (req, res, next) => {
     const dishes = await DishSchema.find();
     const dishesMapped = [];
     for (const food of products) {
-      for(const dish of dishes){
+      for (const dish of dishes) {
         const foodLower = food.name.toLowerCase().trim();
         const dishLower = dish.main_ingredient.toLowerCase().trim();
         if (foodLower.includes(dishLower)) {
