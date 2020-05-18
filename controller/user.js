@@ -179,21 +179,6 @@ exports.forgetPassword = async (req, res, next) => {
       text: `Click here: https://hml-project.herokuapp.com/api/user/reset?username=${username}`,
     };
     transporter.sendMail(mailOptions);
-    // const emailX = new Email({
-    //   message: {
-    //     from: process.env.EMAIL,
-    //   },
-    //   transport: {
-    //     jsonTransport: true,
-    //   },
-    // });
-    // emailX.send({
-    //   message: {
-    //     to: email,
-    //     subject: 'Khôi phục mật khẩu',
-    //     content: `Click here: https://hml-project.herokuapp.com/api/user/reset?username=${username}`
-    //   }
-    // });
     res.json({ success: true, message: "Đã gửi email!!!" });
   } catch (error) {
     console.log(error);
@@ -205,8 +190,7 @@ exports.forgetPassword = async (req, res, next) => {
 
 exports.resetPassword = async (req, res, next) => {
   try {
-    const { username, email } = req.query;
-    console.log(username);
+    const { username } = req.query;
     const user = await UserSchema.findOne({ username: username });
     const password = parseInt(100000 + Math.random() * 899999);
     if (user) {
