@@ -147,6 +147,7 @@ exports.changePassword = async (req, res, next) => {
   }
 };
 const nodemailer = require("nodemailer");
+// const Email = require("email-templates");
 // desc     api for forget password
 // route    /api/user/forget?username=&email=
 exports.forgetPassword = async (req, res, next) => {
@@ -164,8 +165,8 @@ exports.forgetPassword = async (req, res, next) => {
       port: 465,
       secure: true,
       auth: {
-        user: process.env.user,
-        pass: process.env.pass,
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD,
       },
       tls: {
         rejectUnauthorized: false,
@@ -178,6 +179,21 @@ exports.forgetPassword = async (req, res, next) => {
       text: `Click here: https://hml-project.herokuapp.com/api/user/reset?username=${username}`,
     };
     transporter.sendMail(mailOptions);
+    // const emailX = new Email({
+    //   message: {
+    //     from: process.env.EMAIL,
+    //   },
+    //   transport: {
+    //     jsonTransport: true,
+    //   },
+    // });
+    // emailX.send({
+    //   message: {
+    //     to: email,
+    //     subject: 'Khôi phục mật khẩu',
+    //     content: `Click here: https://hml-project.herokuapp.com/api/user/reset?username=${username}`
+    //   }
+    // });
     res.json({ success: true, message: "Đã gửi email!!!" });
   } catch (error) {
     console.log(error);
