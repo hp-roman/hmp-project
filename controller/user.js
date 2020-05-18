@@ -70,6 +70,7 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { username, password } = req.query;
+    console.log(password, md5(password));
     if (!username || !password)
       return res.json({
         success: false,
@@ -192,7 +193,8 @@ exports.resetPassword = async (req, res, next) => {
   try {
     const { username } = req.query;
     const user = await UserSchema.findOne({ username: username });
-    const password = parseInt(100000 + Math.random() * 899999);
+    const password = parseInt(100000 + Math.random() * 899999).toString();
+    console.log(password, md5(password));
     if (user) {
       await UserSchema.updateOne(
         { _id: user._id },
