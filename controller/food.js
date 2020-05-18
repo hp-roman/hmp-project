@@ -129,9 +129,20 @@ exports.getHintMenu = async (req, res, next) => {
       for (const dish of dishes) {
         const foodLower = food.name.toLowerCase().trim();
         const dishLower = dish.main_ingredient.toLowerCase().trim();
-        if (foodLower.includes(dishLower)) {
-          dishesMapped.push(dish);
+        const main = dishLower.split(',') || [];
+        if(main != []){
+          for(const t of main){
+            if (foodLower.includes(t)) {
+              dishesMapped.push(dish);
+              break;
+            }
+          }
+        }else {
+          if (foodLower.includes(t)) {
+            dishesMapped.push(dish);
+          }
         }
+        
       }
     }
     res.json({
