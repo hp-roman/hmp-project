@@ -8,7 +8,8 @@ const DishSchema = new mongoose.Schema({
     img: String,
     url: String,
     view: Number,
-    price: Number
+    price: Number,
+    id_catogory: String,
 });
 
 module.exports = mongoose.model('Dishes', DishSchema);

@@ -1,6 +1,9 @@
 const HistorySchema = require("../models/history");
 const DishSchema = require("../models/dishes");
 const UserSchema = require("../models/user");
+const StatisticSchema = require("../models/statistic");
+const CatogorySchema = require('../models/catogories');
+const NutritionSchema = require('../models/nutritions');
 
 // desc     api for viewing a dish
 // route    /api/history/?id=&token=
@@ -20,19 +23,25 @@ exports.viewDish = async (req, res, next) => {
         },
         history
       );
-      return res.json({
-        message: "Viewed",
-      });
     } else {
       await HistorySchema.create({
         id_dish: id,
         view: 1,
         token: token,
       });
-      return res.json({
-        message: "Added",
-      });
     }
+    const dish = await DishSchema.findOne({_id: id});
+      if(dish.id_catogory){
+        const user = await UserSchema.findOne({token: token});
+        const statistic = await StatisticSchema.findOne({_id: user.id_statistic});
+        const catogory = await CatogorySchema.findOne({_id: dish.id_catogory});
+        const nutrition = await NutritionSchema.findOne({_id: catogory.id_nutrition});
+        statistic.protein += nutrition.protein;
+        statistic.lipid += nutrition.lipid;
+        statistic.glucid += nutrition.glucid;
+        await StatisticSchema.updateOne({_id: statistic._id}, statistic); 
+      }
+    res.json({ success: true, message: "Created history" });
   } catch (error) {}
 };
 
