@@ -160,7 +160,9 @@ exports.forgetPassword = async (req, res, next) => {
     if (!email.match(/[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim)) {
       return res.json({ success: false, message: "Email không đúng!!!" });
     }
+    console.log(process.env.EMAIL, process.env.PASSWORD);
     const transporter = nodemailer.createTransport({
+      pool: true,
       host: "smtp.gmail.com",
       port: 465,
       secure: true,
