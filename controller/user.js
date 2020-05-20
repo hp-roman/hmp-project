@@ -174,6 +174,7 @@ exports.forgetPassword = async (req, res, next) => {
       auth: {
         type: "OAuth2",
         user: process.env.EMAIL,
+        pass: process.env.PASSWORD,
         clientId: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
         refreshToken: refreshToken,
