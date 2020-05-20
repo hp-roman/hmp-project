@@ -147,7 +147,13 @@ exports.changePassword = async (req, res, next) => {
   }
 };
 const nodemailer = require("nodemailer");
-// const Email = require("email-templates");
+const { google } = require("googleapis");
+const oauth2Client = new google.auth.OAuth2(
+  process.env.CLIENT_ID,
+  process.env.CLIENT_SECRET,
+  process.env.CLIENT_URL
+);
+
 // desc     api for forget password
 // route    /api/user/forget?username=&email=
 exports.forgetPassword = async (req, res, next) => {
@@ -160,15 +166,20 @@ exports.forgetPassword = async (req, res, next) => {
     if (!email.match(/[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim)) {
       return res.json({ success: false, message: "Email không đúng!!!" });
     }
-    console.log(process.env.EMAIL, process.env.PASSWORD);
-    const transporter = nodemailer.createTransport({
+    const refreshToken = process.env.REFRESH_TOKEN;
+    oauth2Client.setCredentials({refresh_token: refreshToken});
+    const accessToken = oauth2Client.getAccessToken();
+    let transporter = nodemailer.createTransport({
       service: "gmail",
-      port: 465,
-      secure: true,
       auth: {
+        type: "OAuth2",
         user: process.env.EMAIL,
-        pass: process.env.PASSWORD,
-      }
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: refreshToken,
+        accessToken: accessToken,
+        expires: 3600,
+      },
     });
     const mailOptions = {
       from: process.env.user,
