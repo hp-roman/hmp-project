@@ -189,7 +189,7 @@ exports.forgetPassword = async (req, res, next) => {
     };
     transporter.sendMail(mailOptions, (err, res) => {
       err ? console.log(err) : console.log(res);
-     smtpTransport.close();
+      transporter.close();
     });
     res.json({ success: true, message: "Đã gửi email!!!" });
   } catch (error) {
