@@ -11,7 +11,7 @@ const accessTokenSecret = "healthy-meal-planner";
 
 exports.register = async (req, res, next) => {
   try {
-    let { username, password, confirm } = req.query;
+    let { username, password, confirm, email } = req.query;
     if (!username || !password || !confirm) {
       return res.json({
         success: false,
@@ -29,6 +29,9 @@ exports.register = async (req, res, next) => {
         success: false,
         message: "Mật khẩu quá ngắn!!!",
       });
+    }
+    if (!email.match(/[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim)) {
+      return res.json({ success: false, message: "Email không đúng!!!" });
     }
     if (confirm != password) {
       return res.json({
@@ -55,6 +58,7 @@ exports.register = async (req, res, next) => {
         password: md5(password),
         name: username,
         id_statistic: statistic._id,
+        email: email
       });
       return res.status(201).json({
         success: true,
@@ -158,14 +162,14 @@ const oauth2Client = new google.auth.OAuth2(
 // route    /api/user/forget?username=&email=
 exports.forgetPassword = async (req, res, next) => {
   try {
-    const { username, email } = req.query;
-    if (!username || !email)
+    const { username } = req.query;
+    if (!username)
       return res.json({ success: false, message: "Vui lòng điền!!!" });
-    if (!(await UserSchema.findOne({ username: username })))
+    const user = await UserSchema.findOne({ username: username });
+    if (!user){
       return res.json({ success: false, message: `${username} không tồn tại` });
-    if (!email.match(/[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim)) {
-      return res.json({ success: false, message: "Email không đúng!!!" });
-    }
+    }   
+    const email = user.email;
     const refreshToken = process.env.REFRESH_TOKEN;
     oauth2Client.setCredentials({ refresh_token: refreshToken });
     const accessToken = await oauth2Client.getAccessToken();
