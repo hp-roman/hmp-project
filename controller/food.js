@@ -54,7 +54,7 @@ exports.getFoodsMenu = async (req, res, next) => {
           }
         }
         if (message != "") {
-          message = "Không bao gồm: " + message;
+          message = "Giá không bao gồm: " + message;
         }
         menu.message = message;
         menu.price = price.toFixed(1);
