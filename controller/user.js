@@ -188,11 +188,7 @@ exports.forgetPassword = async (req, res, next) => {
       subject: "Khôi phục mật khẩu",
       text: `Click here: https://hml-project.herokuapp.com/api/user/reset?username=${username}`,
     };
-    transporter.sendMail(mailOptions, (err, res) => {
-      if(err){
-        console.log(err);
-      }
-    });
+    transporter.sendMail(mailOptions);
     res.json({ success: true, message: "Đã gửi email!!!" });
   } catch (error) {
     console.log(error);
