@@ -169,7 +169,6 @@ exports.forgetPassword = async (req, res, next) => {
     const refreshToken = process.env.REFRESH_TOKEN;
     oauth2Client.setCredentials({ refresh_token: refreshToken });
     const accessToken = await oauth2Client.getAccessToken();
-    console.log(accessToken);
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
@@ -189,7 +188,11 @@ exports.forgetPassword = async (req, res, next) => {
       subject: "Khôi phục mật khẩu",
       text: `Click here: https://hml-project.herokuapp.com/api/user/reset?username=${username}`,
     };
-    transporter.sendMail(mailOptions);
+    transporter.sendMail(mailOptions, (err, res) => {
+      if(err){
+        console.log(err);
+      }
+    });
     res.json({ success: true, message: "Đã gửi email!!!" });
   } catch (error) {
     console.log(error);
