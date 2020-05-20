@@ -178,17 +178,19 @@ exports.forgetPassword = async (req, res, next) => {
         clientId: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
         refreshToken: refreshToken,
-        accessToken: accessToken,
-        expires: 3600,
+        accessToken: accessToken
       },
     });
     const mailOptions = {
-      from: process.env.user,
+      from: process.env.EMAIL,
       to: email,
       subject: "Khôi phục mật khẩu",
       text: `Click here: https://hml-project.herokuapp.com/api/user/reset?username=${username}`,
     };
-    transporter.sendMail(mailOptions);
+    transporter.sendMail(mailOptions, (err, res) => {
+      err ? console.log(err) : console.log(res);
+     smtpTransport.close();
+    });
     res.json({ success: true, message: "Đã gửi email!!!" });
   } catch (error) {
     console.log(error);
