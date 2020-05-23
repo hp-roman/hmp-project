@@ -220,3 +220,40 @@ exports.resetPassword = async (req, res, next) => {
     console.log(error);
   }
 };
+
+// desc   api for feedback
+// route  api/user/feedback?token=&content
+exports.feedback = async (req, res, next) => {
+  try {
+    const { token, content } = req.query;
+    const user = await UserSchema.findOne({token:token});
+    const email = user.email;
+    const refreshToken = process.env.REFRESH_TOKEN;
+    oauth2Client.setCredentials({ refresh_token: refreshToken });
+    const accessToken = await oauth2Client.getAccessToken();
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        type: "OAuth2",
+        user: process.env.EMAIL,
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: refreshToken,
+        accessToken: accessToken.token,
+      },
+    });
+    const mailOptions = {
+      from: email,
+      to: process.env.EMAIL,
+      subject: `Feedback from ${user.username}`,
+      text: `Content: ${content}`,
+    };
+    transporter.sendMail(mailOptions);
+    res.json({ success: true, message: "Đã gửi feedback!!!" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
