@@ -248,7 +248,7 @@ exports.feedback = async (req, res, next) => {
       from: email,
       to: process.env.EMAIL,
       subject: `Feedback from ${user.username}`,
-      text: `Content: ${content}`,
+      text: `Content from ${email}: ${content}`,
     };
     transporter.sendMail(mailOptions);
     res.json({ success: true, message: "Đã gửi feedback!!!" });
