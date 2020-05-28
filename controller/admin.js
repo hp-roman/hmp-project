@@ -11,8 +11,8 @@ exports.login = async (req, res, next) => {
     if (username === "admin" && password === "healthymealplanner") {
       const accessToken = jwt.sign(
         {
-          username: users[0].username,
-          exp: Math.floor(Date.now() / 1000) + 60 * 60,
+          username: username,
+          exp: Math.floor(Date.now()) + 60 * 60,
         },
         accessTokenSecret
       );
