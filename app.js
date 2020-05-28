@@ -12,14 +12,11 @@ connectDB();
 
 // Route files
 const foodRoute = require('./router/food');
-const lotteRoute = require('./router/admin_lotte');
-const catogoryRoute = require('./router/admin_catogory');
-const nutritionRoute = require('./router/admin_nutritions');
-const menuRoute = require('./router/admin_menu');
 const dishRoute = require('./router/dish');
 const userRoute = require('./router/user');
 const statisticRoute = require('./router/statistic');
 const historyRoute = require('./router/history');
+const adminRoute = require('./router/admin');
 
 
 
@@ -33,14 +30,11 @@ if (process.env.NODE_ENV === 'development') {
 
 // Mount routers
 app.use('/api/foods/', foodRoute);
-app.use('/api/admin/lotte', lotteRoute);
-app.use('/api/admin/catogory', catogoryRoute);
-app.use('/api/admin/nutrition', nutritionRoute);
-app.use('/api/admin/menu', menuRoute);
 app.use('/api/dish', dishRoute);
 app.use('/api/user', userRoute);
 app.use('/api/statistic', statisticRoute);
 app.use('/api/history', historyRoute);
+app.use('/api/admin/', adminRoute);
 
 
 
