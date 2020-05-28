@@ -12,7 +12,6 @@ exports.login = async (req, res, next) => {
       const accessToken = jwt.sign(
         {
           username: users[0].username,
-          exp: Math.floor(Date.now() / 1000) + 60 * 60,
         },
         accessTokenSecret
       );
