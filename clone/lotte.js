@@ -56,7 +56,7 @@ async function scrapeLotte() {
                     tmp.indexOf("')") - 2 - tmp.indexOf("('"));
                 product.products.push({
                     name: productName,
-                    price: parseFloat(productPrice) * 1000,
+                    price: parseFloat(productPrice),
                     img: productImage,
                     url: productURL
                 });
