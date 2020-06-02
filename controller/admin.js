@@ -3,6 +3,7 @@ const accessTokenSecret = "healthy-meal-planner";
 const clone = require("../middleware/lotte");
 const Catogory = require("../models/catogories");
 const Dish = require("../models/dishes");
+const Product = require('../models/products');
 
 // desc     API login for admin
 // route    /api/admin/login
@@ -35,11 +36,19 @@ exports.updateAll = async (req, res, next) => {
     const resources = await clone();
     // update id_catogory
     const catogories = await Catogory.find();
-    // const newResrouces = updateCatogory(resources, catogories);
+    const newResrouces = updateCatogory(resources, catogories);
     const dishes = await Dish.find();
-    // const newDishes = updateDish(dishes, newResrouces);
+    const newDishes = updateDish(dishes, newResrouces);
+    if(resources){
+      newDishes.map(async dish => {
+        await Dish.updateOne({_id: dish._id}, dish);
+      });
+      await Product.deleteMany();
+      await Product.insertMany(newResrouces);
+    }
 
-    res.json({ success: true, data: resources });
+
+    res.json({ success: true, message: 'Updated successfully' });
   } catch (error) {
     res.json({ success: false, error: error });
   }
@@ -49,7 +58,6 @@ function updateDish(dishes, foods) {
   try {
     dishes.map((dish) => {
       foods.map((food) => {
-        console.log(dish.main_ingredient, food.name);
         const lowerD = dish.main_ingredient.toLowerCase();
         const lowerF = food.name.toLowerCase();
         if (lowerF.includes(lowerD)) {
@@ -57,20 +65,18 @@ function updateDish(dishes, foods) {
           dish.id_catogory = food.id_catogory;
           return;
         } else {
-          // const lowerDs = lowerD.split(",") || [];
-          // if (lowerDs !== []) {
-          //   lowerDs.map((value) => {
-          //     if (lowerF.includes(value)) {
-          //       dish.price = food.price;
-          //       dish.id_catogory = food.id_catogory;
-          //       return;
-          //     }
-          //   });
-          // }
+          const lowerDs = lowerD.split(",") || [];
+          if (lowerDs !== []) {
+            lowerDs.map((value) => {
+              if (lowerF.includes(value)) {
+                dish.price = food.price;
+                dish.id_catogory = food.id_catogory;
+                return;
+              }
+            });
+          }
         }
-        console.log(food);
       });
-      console.log(dish);
     });
     return dishes;
   } catch (error) {
@@ -88,7 +94,6 @@ function updateCatogory(resource, cagotory) {
   const rstP = addCatogoryId(rsP, cgP);
   const rstL = addCatogoryId(rsL, cgL);
   const rstG = addCatogoryId(rsG, cgG);
-  console.log([...rstP, ...rstL, ...rstG]);
   return [...rstP, ...rstL, ...rstG];
 }
 

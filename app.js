@@ -18,7 +18,11 @@ const userRoute = require('./router/user');
 const statisticRoute = require('./router/statistic');
 const historyRoute = require('./router/history');
 const adminRoute = require('./router/admin');
-const adNutritionRoute = require('./router/admin_nutritions');
+const adNutritionRoute = require('./router/admin_nutrition');
+const adMenuRoute = require('./router/admin_menu');
+const adUserRoute = require('./router/admin_user');
+const adFoodRoute = require('./router/admin_food');
+const adDishRoute = require('./router/admin_dish');
 
 
 
@@ -39,6 +43,10 @@ app.use('/api/statistic', statisticRoute);
 app.use('/api/history', historyRoute);
 app.use('/api/admin/', adminRoute);
 app.use('/api/admin/nutrition', adNutritionRoute);
+app.use('/api/admin/menu', adMenuRoute);
+app.use('/api/admin/food', adFoodRoute);
+app.use('/api/admin/user', adUserRoute);
+app.use('/api/admin/dish', adDishRoute);
 
 
 

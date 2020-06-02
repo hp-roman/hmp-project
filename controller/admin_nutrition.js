@@ -16,9 +16,8 @@ exports.getNutritions = async (req, res, next) => {
 // @route   /api/amdin/nutrition/update
 
 exports.updateNutritions = async (req, res, next) => {
-    try {
-        
-    } catch (error) {
-        res.json({success: false, error: error});
-    }
-}
+  try {
+  } catch (error) {
+    res.json({ success: false, error: error });
+  }
+};
