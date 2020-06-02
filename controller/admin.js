@@ -86,15 +86,15 @@ function updateDish(dishes, foods) {
 
 function updateCatogory(resource, cagotory) {
   const rsP = getResourceType(resource, "protein");
-  const rsL = getResourceType(resource, "lipid");
+  const rsM = getResourceType(resource, "mineral");
   const rsG = getResourceType(resource, "glucid");
   const cgP = getResourceType(cagotory, "protein");
-  const cgL = getResourceType(cagotory, "lipid");
+  const cgM = getResourceType(cagotory, "mineral");
   const cgG = getResourceType(cagotory, "glucid");
   const rstP = addCatogoryId(rsP, cgP);
-  const rstL = addCatogoryId(rsL, cgL);
+  const rstM = addCatogoryId(rsM, cgM);
   const rstG = addCatogoryId(rsG, cgG);
-  return [...rstP, ...rstL, ...rstG];
+  return [...rstP, ...rstM, ...rstG];
 }
 
 function getResourceType(resource, type) {
