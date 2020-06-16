@@ -12,12 +12,19 @@ exports.getNutritions = async (req, res, next) => {
   }
 };
 
-// @desc    API update nutritions
-// @route   /api/amdin/nutrition/update
+// @desc    API delete nutrition
+// @route   /api/amdin/nutrition/
 
-exports.updateNutritions = async (req, res, next) => {
+exports.deleteNutrition = async (req, res, next) => {
   try {
+    const {json} = req.query;
+    const nutrition = JSON.parse(json);
+    await NutritionsSchema.deleteOne({_id: nutrition._id});
+    const nutritions = await NutritionsSchema.find();
+    res.json({success: true, data: nutritions});
   } catch (error) {
-    res.json({ success: false, error: error });
+    res.json({success: false, error: error});
   }
-};
+}
+
+
